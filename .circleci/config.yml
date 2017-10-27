@@ -58,3 +58,7 @@ workflows:
           requires:
             - setup_npm_deps
             - build
+          filters:
+            branches:
+              only:
+                - master
