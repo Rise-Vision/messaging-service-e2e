@@ -1,0 +1,60 @@
+version: 2
+
+jobs:
+    setup_npm_deps:
+      docker:
+        - image: circleci/node:7.10
+      steps:
+        - checkout
+        - restore_cache:
+            key: node-cache-{{ checksum "package.json" }}
+        - run: npm install
+        - save_cache:
+            key: node-cache-{{ checksum "package.json" }}
+            paths:
+              - ./node_modules
+    build:
+      docker:
+        - image: circleci/node:7.10
+      steps:
+        - checkout
+        - restore_cache:
+            key: node-cache-{{ checksum "package.json" }}
+        - run: npm run build
+        - save_cache:
+            key: dist-{{ .Branch }}
+            paths:
+              - ./dist
+    deploy_to_gcf:
+      docker:
+        - image: google/cloud-sdk
+          environment:
+            GOOGLE_PROJECT_ID: messaging-service-180514
+            GOOGLE_COMPUTE_ZONE: us-central1-a
+      steps:
+        - restore_cache:
+            key: node-cache-{{ checksum "package.json" }}
+            key: dist-{{ .Branch }}
+        - run:
+            name: Setup gcloud
+            command: |
+              echo $GOOGLE_AUTH | base64 --decode -i > ${HOME}/gcp-key.json
+              gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+              gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+              gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+        - deploy:
+            command: |
+              cd dist
+              gcloud beta functions deploy messagingServiceE2E --stage-bucket messaging-service-e2e  --trigger-http
+workflows:
+  version: 2
+  workflow1:
+    jobs:
+      - setup_npm_deps
+      - build:
+          requires:
+            - setup_npm_deps
+      - deploy_to_gcf:
+          requires:
+            - setup_npm_deps
+            - build
