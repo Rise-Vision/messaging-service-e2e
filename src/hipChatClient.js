@@ -11,7 +11,7 @@ export default class HipChatClient extends EventEmitter {
   postAlert(message) {
 
     let params = {
-      room: "Alerts",
+      room: "Delivery",
       from: 'ms-e2e',
       message: (message) ? message : 'Failure on e2e tests',
       color: 'red',
