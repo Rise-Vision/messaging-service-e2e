@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package-lock.json,./npm-debug.log --copy-files && cd dist && npm install --production",
-    "start": "npm run build && node -e 'require(\"./dist/index.js\").messagingServiceE2E(null, ()=>{})'"
+    "start": "nodemon ./dev/dev-app.js --exec babel-node --presets es2015,stage-2"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,9 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "express": "^4.16.2",
+    "nodemon": "^1.12.1",
     "rimraf": "^2.6.2"
   }
 }
