@@ -17,10 +17,10 @@ export default class HipChatClient extends EventEmitter {
       color: 'red',
       notify: true,
     };
-
+    const self = this;
     this.hipChat.postMessage(params, function(error, data) {
       if (error) console.log(error);
-      this.emit("posted", data);
+      self.emit("posted", data);
     });
   }
 

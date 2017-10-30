@@ -15,7 +15,16 @@ export default class Test {
           version: ""
         }
       }
+
       messagingServiceClient.write(message);
+    });
+
+    messagingServiceClient.on("data", (data) => {
+      if(!data.includes("Messaging Service WebSocket Connected: messaging-service")){
+        hipChatClient.postAlert("Get no connection response from the messaging service");
+      } else if(data !== {}) {
+        hipChatClient.postAlert("Couldn't get the empty data when sending a WATCH message");
+      }
       messagingServiceClient.disconnect();
     });
 
