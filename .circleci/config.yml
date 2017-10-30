@@ -22,7 +22,7 @@ jobs:
             key: node-cache-{{ checksum "package.json" }}
         - run: npm run build
         - save_cache:
-            key: dist-{{ .BuildNum }}
+            key: dist-{{ .Revision }}
             paths:
               - ./dist
     deploy_to_gcf:
@@ -34,7 +34,7 @@ jobs:
       steps:
         - restore_cache:
             key: node-cache-{{ checksum "package.json" }}
-            key: dist-{{ .BuildNum }}
+            key: dist-{{ .Revision }}
         - run:
             name: Setup gcloud
             command: |
