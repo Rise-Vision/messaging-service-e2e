@@ -1,51 +1,49 @@
 import MessagingServiceClient from "./messaging-service-client";
 import HipChatClient from "./hipChatClient";
+import verifyToken from "./token/verify-token";
 const timeout = 10000;
 
 export default class Test {
-  constructor(hipChatAPIKey){
-      this.hasFinished = false;
-      this.hipChatClient = new HipChatClient(hipChatAPIKey);
+  constructor(hipChatAPIKey, mstokenKey){
+    this.hipChatClient = new HipChatClient(hipChatAPIKey);
+    this.mstokenKey = mstokenKey;
   }
 
   run() {
     const messagingServiceClient = new MessagingServiceClient();
+    this.noResponseTimeout = this._setTimeout(messagingServiceClient);
 
     messagingServiceClient.on("connected", ()=>{
       let message = {
         msg: "WATCH",
         data: {
-          displayId: "",
-          filePath: "",
-          version: ""
+          displayId: "12345",
+          filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
+          version: "12345"
         }
       }
 
       messagingServiceClient.write(message);
-      this._setTimeout();
     });
 
     messagingServiceClient.on("data", (data) => {
-      if(!data.includes("Messaging Service WebSocket Connected: messaging-service")){
-        this.hipChatClient.postAlert("Get no connection response from the messaging service");
-      } else if(data !== {}) {
-        this.hipChatClient.postAlert("Couldn't get the empty data when sending a WATCH message");
+      if (!data.token || !data.token.hash) {return;}
+
+      if (verifyToken(data.token.data, data.token.hash, this.mstokenKey)) {
+        messagingServiceClient.disconnect();
+        clearTimeout(this.noResponseTimeout);
       }
-      messagingServiceClient.disconnect();
-      this.hasFinished = true;
     });
 
     messagingServiceClient.on("error", (error)=>{
-      hipChatClient.postAlert(JSON.stringify(error));
+      this.hipChatClient.postAlert(JSON.stringify(error));
     });
   }
 
-  _setTimeout() {
-    let testTimeout = setTimeout(()=>{
-      if(!this.hasFinished) {
-        this.hipChatClient.postAlert("Got no response from messaging service");
-      }
-      clearTimeout(testTimeout);
+  _setTimeout(client) {
+    return setTimeout(()=>{
+      this.hipChatClient.postAlert("MS WATCH test failed");
+      client.disconnect();
     }, timeout);
   }
 }
