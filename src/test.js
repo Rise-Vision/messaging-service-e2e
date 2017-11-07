@@ -1,10 +1,12 @@
 import MessagingServiceClient from "./messaging-service-client";
 import HipChatClient from "./hipChatClient";
+import verifyToken from "./token/verify-token";
 const timeout = 10000;
 
 export default class Test {
-  constructor(hipChatAPIKey){
+  constructor(hipChatAPIKey, mstokenKey){
     this.hipChatClient = new HipChatClient(hipChatAPIKey);
+    this.mstokenKey = mstokenKey;
   }
 
   run() {
@@ -25,7 +27,9 @@ export default class Test {
     });
 
     messagingServiceClient.on("data", (data) => {
-      if (data.token && data.token.hash) {
+      if (!data.token || !data.token.hash) {return;}
+
+      if (verifyToken(data.token.data, data.token.hash, this.mstokenKey)) {
         messagingServiceClient.disconnect();
         clearTimeout(this.noResponseTimeout);
       }
