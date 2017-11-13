@@ -2,6 +2,7 @@ import MessagingServiceClient from "./messaging-service-client";
 import HipChatClient from "./hipChatClient";
 import verifyToken from "./token/verify-token";
 const timeout = 10000;
+const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-service-180514&organizationId=960705295332&minLogLevel=0&expandAll=false&resource=cloud_function%2Ffunction_name%2FmessagingServiceE2E"
 
 export default class Test {
   constructor(hipChatAPIKey, mstokenKey){
@@ -31,6 +32,8 @@ export default class Test {
 
       if (verifyToken(data.token.data, data.token.hash, this.mstokenKey)) {
         messagingServiceClient.disconnect();
+
+        console.log("Clearing alert timeout");
         clearTimeout(this.noResponseTimeout);
       }
     });
@@ -42,7 +45,8 @@ export default class Test {
 
   _setTimeout(client) {
     return setTimeout(()=>{
-      this.hipChatClient.postAlert("MS WATCH test failed");
+      console.log("Sending failure alert");
+      this.hipChatClient.postAlert(`MS WATCH test failed\nSee logs at ${logPath}`);
       client.disconnect();
     }, timeout);
   }
