@@ -21,10 +21,12 @@ export default class Test {
         version: "12345"
       }
 
+      console.log(`Sending ${JSON.stringify(message)}`);
       messagingServiceClient.write(message);
     });
 
     messagingServiceClient.on("data", (data) => {
+      console.log(`Received ${JSON.stringify(data)}`);
       if (!data.token || !data.token.hash) {return;}
 
       if (verifyToken(data.token.data, data.token.hash, this.mstokenKey)) {

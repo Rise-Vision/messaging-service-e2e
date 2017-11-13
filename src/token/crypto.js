@@ -9,6 +9,9 @@ export default {
 
     hasher.update(cipher.update(inputBuffer));
     hasher.update(cipher.final());
-    return hasher.digest("hex");
+
+    const hashResult = hasher.digest("hex");
+    console.log(`Hash result ${hashResult}`);
+    return hashResult;
   }
 };
