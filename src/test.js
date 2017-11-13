@@ -17,7 +17,7 @@ export default class Test {
       let message = {
         msg: "WATCH",
         data: {
-          displayId: "12345",
+          displayId: "E2Etest",
           filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
           version: "12345"
         }
