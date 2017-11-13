@@ -15,12 +15,10 @@ export default class Test {
 
     messagingServiceClient.on("connected", ()=>{
       let message = {
-        msg: "WATCH",
-        data: {
-          displayId: "E2Etest",
-          filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
-          version: "12345"
-        }
+        topic: "WATCH",
+        displayId: "E2Etest",
+        filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
+        version: "12345"
       }
 
       messagingServiceClient.write(message);
