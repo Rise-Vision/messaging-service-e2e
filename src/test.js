@@ -15,18 +15,18 @@ export default class Test {
 
     messagingServiceClient.on("connected", ()=>{
       let message = {
-        msg: "WATCH",
-        data: {
-          displayId: "E2Etest",
-          filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
-          version: "12345"
-        }
+        topic: "WATCH",
+        displayId: "E2Etest",
+        filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
+        version: "12345"
       }
 
+      console.log(`Sending ${JSON.stringify(message)}`);
       messagingServiceClient.write(message);
     });
 
     messagingServiceClient.on("data", (data) => {
+      console.log(`Received ${JSON.stringify(data)}`);
       if (!data.token || !data.token.hash) {return;}
 
       if (verifyToken(data.token.data, data.token.hash, this.mstokenKey)) {
