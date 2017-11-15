@@ -4,7 +4,7 @@ import verifyToken from "./token/verify-token";
 const timeout = 10000;
 const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-service-180514&organizationId=960705295332&minLogLevel=0&expandAll=false&resource=cloud_function%2Ffunction_name%2FmessagingServiceE2E"
 
-export default class Test {
+export default class TokenTest {
   constructor(hipChatAPIKey, mstokenKey){
     this.hipChatClient = new HipChatClient(hipChatAPIKey);
     this.mstokenKey = mstokenKey;
