@@ -2,7 +2,8 @@ import MessagingServiceClient from "./messaging-service-client";
 import HipChatClient from "./hipChatClient";
 import verifyToken from "./token/verify-token";
 const timeout = 10000;
-const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-service-180514&organizationId=960705295332&minLogLevel=0&expandAll=false&resource=cloud_function%2Ffunction_name%2FmessagingServiceE2E"
+const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-service-180514&organizationId=960705295332&minLogLevel=0&expandAll=false&resource=cloud_function%2Ffunction_name%2FmessagingServiceE2E";
+const displayId = "E2Etest-WATCH-TOKEN";
 
 export default class TokenTest {
   constructor(hipChatAPIKey, mstokenKey){
@@ -17,7 +18,7 @@ export default class TokenTest {
     messagingServiceClient.on("connected", ()=>{
       let message = {
         topic: "WATCH",
-        displayId: "E2Etest",
+        displayId: displayId,
         filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
         version: "12345"
       }
@@ -33,7 +34,7 @@ export default class TokenTest {
       if (verifyToken(data.token.data, data.token.hash, this.mstokenKey)) {
         messagingServiceClient.disconnect();
 
-        console.log("Clearing alert timeout");
+        console.log("Clearing alert timeout for token test");
         clearTimeout(this.noResponseTimeout);
       }
     });
@@ -45,8 +46,8 @@ export default class TokenTest {
 
   _setTimeout(client) {
     return setTimeout(()=>{
-      console.log("Sending failure alert");
-      this.hipChatClient.postAlert(`MS WATCH test failed\nSee logs at ${logPath}`);
+      console.log("Sending failure alert for token test");
+      this.hipChatClient.postAlert(`MS WATCH token test failed\nSee logs at ${logPath}`);
       client.disconnect();
     }, timeout);
   }
