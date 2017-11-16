@@ -18,7 +18,7 @@ export default class HipChatClient extends EventEmitter {
       notify: true,
     };
     this.hipChat.postMessage(params, (error, data) => {
-      if (error) console.log(error);
+      if (error) console.error(error);
       this.emit("posted", data);
     });
   }
