@@ -17,27 +17,26 @@ export default class MessagingServiceClient extends EventEmitter {
     });
 
     this.connection.on("open", ()=>{
-      console.log("messaging service connected");
+      console.log(`messaging service connected for ${displayId}`);
       this.emit("connected");
     });
 
     this.connection.on("close", ()=>{
-      console.log("messaging service connection closed");
+      console.log(`messaging service connection closed for ${displayId}`);
       this.emit("closed");
     });
 
     this.connection.on("end", ()=>{
-      console.log("messaging service disconnected");
+      console.log(`messaging service disconnected for ${displayId}`);
       this.emit("disconnected");
     });
 
     this.connection.on("data", (data)=>{
-      console.log("message received", JSON.stringify(data));
       this.emit("data", data);
     });
 
     this.connection.on("error", (error)=>{
-      console.log("messaging error");
+      console.log(`messaging error for ${displayId}`);
       this.emit("error", error);
     });
   }
