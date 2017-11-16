@@ -16,7 +16,6 @@ export default class UpdateTest {
     this.storage = Storage({
       projectId: "avid-life-623"
     });
-    this.writeLocalFile = require("util").promisify(require("fs").writeFile);
   }
 
   run() {
@@ -79,5 +78,14 @@ export default class UpdateTest {
       .upload(tempLocalFileName, {destination: gcsFileName});
     })
     .catch(console.error.bind(console));
+  }
+
+  writeLocalFile(fileName, data) {
+    return new Promise((res, rej)=>{
+      require("fs").writeFile(fileName, data, err=>{
+        if (err) {return rej(err);}
+        res();
+      });
+    });
   }
 }
