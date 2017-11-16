@@ -4,11 +4,11 @@ import EventEmitter from 'events';
 
 export default class MessagingServiceClient extends EventEmitter {
 
-  constructor() {
+  constructor(displayId, machineId) {
     super();
     const Socket = Primus.createSocket({transformer: "websockets", pathname: '/messaging/primus'});
 
-    this.connection = new Socket(prodConfig.messagingServiceURL, {
+    this.connection = new Socket(`${prodConfig.messagingServiceURL}?displayId=${displayId}&machineId=${machineId}`, {
       reconnect: {
         max: 1800000,
         min: 5000,

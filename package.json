@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Rise-Vision/messaging-service-e2e#readme",
   "dependencies": {
+    "@google-cloud/storage": "^1.4.0",
     "node-hipchat": "^0.4.5",
     "primus": "^7.1.0",
     "ws": "^3.2.0"
