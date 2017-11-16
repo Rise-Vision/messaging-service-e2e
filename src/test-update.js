@@ -75,7 +75,8 @@ export default class UpdateTest {
     .then(()=>{
       console.log(`Uploading file to ${gcsFileName}`);
       return this.storage.bucket(bucket)
-      .upload(tempLocalFileName, {destination: gcsFileName});
+      .upload(tempLocalFileName, {destination: gcsFileName})
+      .then(()=>console.log(`Update test file uploaded successfully`));
     })
     .catch(console.error.bind(console));
   }
