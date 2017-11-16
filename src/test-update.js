@@ -63,7 +63,7 @@ export default class UpdateTest {
 
   _setTimeout(client) {
     return setTimeout(()=>{
-      console.log("Sending failure alert for update test");
+      console.error("Sending failure alert for update test");
       this.hipChatClient.postAlert(`MS WATCH update test failed\nSee logs at ${logPath}`);
       client.disconnect();
     }, timeout);
@@ -75,7 +75,8 @@ export default class UpdateTest {
     .then(()=>{
       console.log(`Uploading file to ${gcsFileName}`);
       return this.storage.bucket(bucket)
-      .upload(tempLocalFileName, {destination: gcsFileName});
+      .upload(tempLocalFileName, {destination: gcsFileName})
+      .then(()=>console.log(`Update test file uploaded successfully`));
     })
     .catch(console.error.bind(console));
   }

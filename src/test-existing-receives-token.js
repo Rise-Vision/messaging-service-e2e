@@ -46,7 +46,7 @@ export default class TokenTest {
 
   _setTimeout(client) {
     return setTimeout(()=>{
-      console.log("Sending failure alert for token test");
+      console.error("Sending failure alert for token test");
       this.hipChatClient.postAlert(`MS WATCH token test failed\nSee logs at ${logPath}`);
       client.disconnect();
     }, timeout);
