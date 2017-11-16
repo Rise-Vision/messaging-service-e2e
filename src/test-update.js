@@ -63,7 +63,7 @@ export default class UpdateTest {
 
   _setTimeout(client) {
     return setTimeout(()=>{
-      console.log("Sending failure alert for update test");
+      console.error("Sending failure alert for update test");
       this.hipChatClient.postAlert(`MS WATCH update test failed\nSee logs at ${logPath}`);
       client.disconnect();
     }, timeout);
