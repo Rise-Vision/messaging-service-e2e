@@ -3,7 +3,7 @@ import HipChatClient from "./hipChatClient";
 import verifyToken from "./token/verify-token";
 import Storage from "@google-cloud/storage";
 
-const timeout = 30000;
+const timeout = 50000;
 const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-service-180514&organizationId=960705295332&minLogLevel=0&expandAll=false&resource=cloud_function%2Ffunction_name%2FmessagingServiceE2E"
 const bucket = "messaging-service-test-bucket";
 const gcsFileName = "test-folder/test-file-for-update.txt";
@@ -13,6 +13,7 @@ export default class UpdateTest {
   constructor(hipChatAPIKey, mstokenKey){
     this.hipChatClient = new HipChatClient(hipChatAPIKey);
     this.mstokenKey = mstokenKey;
+    this.timeoutWasCleared = false;
     this.storage = Storage({
       projectId: "avid-life-623"
     });
@@ -21,6 +22,14 @@ export default class UpdateTest {
   run() {
     const messagingServiceClient = new MessagingServiceClient(displayId, "12345");
     this.noResponseTimeout = this._setTimeout(messagingServiceClient);
+
+    this.timeoutId = this.noResponseTimeout[
+      Object.getOwnPropertySymbols(this.noResponseTimeout)
+      .filter(sym=>sym.toString().includes("asyncId"))[0]
+    ];
+
+    console.log(`Created timeout ${this.timeoutId} for UPDATE`);
+
 
     messagingServiceClient.on("connected", ()=>{
       let message = {
@@ -50,8 +59,16 @@ export default class UpdateTest {
 
         if (versionAfterUpdate !== versiontAtWatchRequest) {
           messagingServiceClient.disconnect();
-          console.log("Clearing alert timeout for update test");
+          console.log(`Clearing alert timeout ${this.timeoutId} for UPDATE`);
           clearTimeout(this.noResponseTimeout);
+
+          let clearedId = this.noResponseTimeout[
+            Object.getOwnPropertySymbols(this.noResponseTimeout)
+            .filter(sym=>sym.toString().includes("asyncId"))[0]
+          ];
+
+          console.log(`Cleared alert timeout ${clearedId} for UPDATE`);
+          this.timeoutWasCleared = true;
         }
       }
     });
@@ -64,6 +81,10 @@ export default class UpdateTest {
   _setTimeout(client) {
     return setTimeout(()=>{
       console.error("Sending failure alert for update test");
+      if (this.timeoutWasCleared) {
+        console.log(`The timeout was cleared so why is this running?`);
+      }
+
       this.hipChatClient.postAlert(`MS WATCH update test failed\nSee logs at ${logPath}`);
       client.disconnect();
     }, timeout);
