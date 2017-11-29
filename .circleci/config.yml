@@ -45,7 +45,7 @@ jobs:
         - deploy:
             command: |
               cd /home/circleci/project/dist
-              gcloud beta functions deploy messagingServiceE2E --stage-bucket messaging-service-e2e  --trigger-http
+              gcloud beta functions deploy messagingServiceE2E --stage-bucket messaging-service-e2e --trigger-http --timeout 540s
 workflows:
   version: 2
   workflow1:
