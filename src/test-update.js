@@ -23,13 +23,8 @@ export default class UpdateTest {
     const messagingServiceClient = new MessagingServiceClient(displayId, "12345");
     this.noResponseTimeout = this._setTimeout(messagingServiceClient);
 
-    this.timeoutId = this.noResponseTimeout[
-      Object.getOwnPropertySymbols(this.noResponseTimeout)
-      .filter(sym=>sym.toString().includes("asyncId"))[0]
-    ];
-
+    this.timeoutId = this.noResponseTimeout._idleStart;
     console.log(`Created timeout ${this.timeoutId} for UPDATE`);
-
 
     messagingServiceClient.on("connected", ()=>{
       let message = {
@@ -62,11 +57,7 @@ export default class UpdateTest {
           console.log(`Clearing alert timeout ${this.timeoutId} for UPDATE`);
           clearTimeout(this.noResponseTimeout);
 
-          let clearedId = this.noResponseTimeout[
-            Object.getOwnPropertySymbols(this.noResponseTimeout)
-            .filter(sym=>sym.toString().includes("asyncId"))[0]
-          ];
-
+          let clearedId = this.noResponseTimeout._idleStart;
           console.log(`Cleared alert timeout ${clearedId} for UPDATE`);
           this.timeoutWasCleared = true;
         }
