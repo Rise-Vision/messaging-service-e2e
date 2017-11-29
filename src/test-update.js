@@ -3,7 +3,7 @@ import HipChatClient from "./hipChatClient";
 import verifyToken from "./token/verify-token";
 import Storage from "@google-cloud/storage";
 
-const timeout = 50000;
+const timeout = 530000;
 const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-service-180514&organizationId=960705295332&minLogLevel=0&expandAll=false&resource=cloud_function%2Ffunction_name%2FmessagingServiceE2E"
 const bucket = "messaging-service-test-bucket";
 const gcsFileName = "test-folder/test-file-for-update.txt";
