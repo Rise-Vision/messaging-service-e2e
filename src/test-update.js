@@ -71,7 +71,7 @@ export default class UpdateTest {
 
   _setTimeout(client) {
     return setTimeout(()=>{
-      console.error("Sending failure alert for update test");
+      console.error(`Sending failure alert for update test from timeout ${this.timeoutId}`);
       if (this.timeoutWasCleared) {
         console.log(`The timeout was cleared so why is this running?`);
       }

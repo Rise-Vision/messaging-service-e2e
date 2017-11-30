@@ -12,7 +12,7 @@ export default class TokenTest {
   }
 
   run() {
-    const messagingServiceClient = new MessagingServiceClient();
+    const messagingServiceClient = new MessagingServiceClient(displayId, "12345");
     this.noResponseTimeout = this._setTimeout(messagingServiceClient);
 
     messagingServiceClient.on("connected", ()=>{
