@@ -29,7 +29,6 @@ export default class UpdateTest {
     messagingServiceClient.on("connected", ()=>{
       let message = {
         topic: "WATCH",
-        displayId: displayId,
         filePath: `${bucket}/${gcsFileName}`,
         version: "12345"
       }
