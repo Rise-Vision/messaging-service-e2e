@@ -40,7 +40,7 @@ export default class UpdateTest {
     let versiontAtWatchRequest = null;
     let versionAfterUpdate = null;
     messagingServiceClient.on("data", (data) => {
-      console.log(`Received ${JSON.stringify(data)}`);
+      console.log(`Received ${JSON.stringify(data)} for timeout ${this.timeoutId}`);
       if (!data.version) {return;}
 
       if (!versiontAtWatchRequest) {
@@ -87,7 +87,7 @@ export default class UpdateTest {
       console.log(`Uploading file to ${gcsFileName}`);
       return this.storage.bucket(bucket)
       .upload(tempLocalFileName, {destination: gcsFileName})
-      .then(()=>console.log(`Update test file uploaded successfully`));
+      .then(()=>console.log(`Update test file uploaded successfully for timeout ${this.timeoutId}`));
     })
     .catch(console.error.bind(console));
   }
