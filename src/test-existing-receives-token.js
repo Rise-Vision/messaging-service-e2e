@@ -18,7 +18,6 @@ export default class TokenTest {
     messagingServiceClient.on("connected", ()=>{
       let message = {
         topic: "WATCH",
-        displayId: displayId,
         filePath: "messaging-service-test-bucket/test-folder/test-file.txt",
         version: "12345"
       }
