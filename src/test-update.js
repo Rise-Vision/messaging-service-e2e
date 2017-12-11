@@ -8,6 +8,7 @@ const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-
 const bucket = "messaging-service-test-bucket";
 const gcsFileName = "test-folder/test-file-for-update.txt";
 const displayId = "E2Etest-WATCH-UPDATE";
+const uploadTimeout = 8000;
 
 export default class UpdateTest {
   constructor(hipChatAPIKey, mstokenKey){
@@ -82,12 +83,20 @@ export default class UpdateTest {
 
   updateFileOnGCS() {
     const tempLocalFileName = "/tmp/temp-file";
+    const uploadTimer = setTimeout(()=>{
+      console.warn(`Upload for ${this.timeoutId} did not complete in ${uploadTimeout}ms. Aborting`);
+      clearTimeout(this.noResponseTimeout);
+    }, uploadTimeout);
+
     return this.writeLocalFile(tempLocalFileName, "test-data")
     .then(()=>{
       console.log(`Uploading file to ${gcsFileName}`);
       return this.storage.bucket(bucket)
       .upload(tempLocalFileName, {destination: gcsFileName})
-      .then(()=>console.log(`Update test file uploaded successfully for timeout ${this.timeoutId}`));
+      .then(()=>{
+        console.log(`Update test file uploaded successfully for timeout ${this.timeoutId}`);
+        clearTimeout(uploadTimer);
+      });
     })
     .catch(console.error.bind(console));
   }
