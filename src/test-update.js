@@ -9,6 +9,7 @@ const bucket = "messaging-service-test-bucket";
 const gcsFileName = "test-folder/test-file-for-update.txt";
 const displayId = "E2Etest-WATCH-UPDATE";
 const uploadTimeout = 8000;
+let displayIdCounter = 0;
 
 export default class UpdateTest {
   constructor(hipChatAPIKey, mstokenKey){
@@ -21,11 +22,14 @@ export default class UpdateTest {
   }
 
   run() {
-    const messagingServiceClient = new MessagingServiceClient(displayId, "12345");
+    displayIdCounter++;
+    if (displayIdCounter > 9) {displayIdCounter = 0}
+    this.displayId = `${displayId}-${displayIdCounter}`;
+    const messagingServiceClient = new MessagingServiceClient(this.displayId, "12345");
     this.noResponseTimeout = this._setTimeout(messagingServiceClient);
 
     this.timeoutId = this.noResponseTimeout._idleStart;
-    console.log(`Created timeout ${this.timeoutId} for UPDATE`);
+    console.log(`Created timeout ${this.timeoutId} for UPDATE on ${this.displayId}`);
 
     messagingServiceClient.on("connected", ()=>{
       let message = {
