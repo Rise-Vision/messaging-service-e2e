@@ -34,6 +34,8 @@ export default class TokenTest {
 
         console.log("Clearing alert timeout for token test");
         clearTimeout(this.noResponseTimeout);
+      } else {
+        console.error("Token mismatch - E2E test is probably using the wrong MS token");
       }
     });
 
@@ -44,7 +46,7 @@ export default class TokenTest {
 
   _setTimeout(client) {
     return setTimeout(()=>{
-      console.error("Sending failure alert for token test");
+      console.log("Sending failure alert for token test");
       sendNotice(`MS WATCH token test failed`, `See logs at ${logPath}`);
       client.disconnect();
     }, timeout);
