@@ -1,5 +1,5 @@
 import MessagingServiceClient from "./messaging-service-client";
-import HipChatClient from "./hipChatClient";
+import {sendNotice} from "./emailer.js";
 import verifyToken from "./token/verify-token";
 import Storage from "@google-cloud/storage";
 
@@ -12,8 +12,7 @@ const uploadTimeout = 8000;
 let displayIdCounter = 0;
 
 export default class UpdateTest {
-  constructor(hipChatAPIKey, mstokenKey){
-    this.hipChatClient = new HipChatClient(hipChatAPIKey);
+  constructor(mstokenKey){
     this.mstokenKey = mstokenKey;
     this.timeoutWasCleared = false;
     this.storage = Storage({
@@ -69,7 +68,7 @@ export default class UpdateTest {
     });
 
     messagingServiceClient.on("error", (error)=>{
-      this.hipChatClient.postAlert(JSON.stringify(error));
+      sendNotice("MS E2E Error", JSON.stringify(error));
     });
   }
 
@@ -80,7 +79,7 @@ export default class UpdateTest {
         console.log(`The timeout was cleared so why is this running?`);
       }
 
-      this.hipChatClient.postAlert(`MS WATCH update test failed\nSee logs at ${logPath}`);
+      sendNotice(`MS WATCH update test failed`, `See logs at ${logPath}`);
       client.disconnect();
     }, timeout);
   }

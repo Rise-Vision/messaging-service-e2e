@@ -1,13 +1,12 @@
 import MessagingServiceClient from "./messaging-service-client";
-import HipChatClient from "./hipChatClient";
 import verifyToken from "./token/verify-token";
+import {sendNotice} from "./emailer.js";
 const timeout = 10000;
 const logPath = "https://console.cloud.google.com/logs/viewer?project=messaging-service-180514&organizationId=960705295332&minLogLevel=0&expandAll=false&resource=cloud_function%2Ffunction_name%2FmessagingServiceE2E";
 const displayId = "E2Etest-WATCH-TOKEN";
 
 export default class TokenTest {
-  constructor(hipChatAPIKey, mstokenKey){
-    this.hipChatClient = new HipChatClient(hipChatAPIKey);
+  constructor(mstokenKey){
     this.mstokenKey = mstokenKey;
   }
 
@@ -39,14 +38,14 @@ export default class TokenTest {
     });
 
     messagingServiceClient.on("error", (error)=>{
-      this.hipChatClient.postAlert(JSON.stringify(error));
+      sendNotice("MS E2E Error", JSON.stringify(error));
     });
   }
 
   _setTimeout(client) {
     return setTimeout(()=>{
       console.error("Sending failure alert for token test");
-      this.hipChatClient.postAlert(`MS WATCH token test failed\nSee logs at ${logPath}`);
+      sendNotice(`MS WATCH token test failed`, `See logs at ${logPath}`);
       client.disconnect();
     }, timeout);
   }
