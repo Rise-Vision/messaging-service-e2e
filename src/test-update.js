@@ -91,7 +91,7 @@ export default class UpdateTest {
 
     return this.writeLocalFile(tempLocalFileName, "test-data")
     .then(()=>{
-      console.log(`Uploading file to ${gcsFileName}`);
+      console.log(`Uploading file for ${this.timeoutId} to ${gcsFileName}`);
       return this.storage.bucket(bucket)
       .upload(tempLocalFileName, {destination: gcsFileName})
       .then(()=>{
