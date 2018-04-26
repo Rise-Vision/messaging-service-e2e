@@ -1,6 +1,5 @@
 import MessagingServiceClient from "./messaging-service-client";
 import {sendNotice} from "./emailer.js";
-import verifyToken from "./token/verify-token";
 import Storage from "@google-cloud/storage";
 
 const timeout = 530000;
@@ -12,8 +11,7 @@ const uploadTimeout = 8000;
 let displayIdCounter = 0;
 
 export default class UpdateTest {
-  constructor(mstokenKey){
-    this.mstokenKey = mstokenKey;
+  constructor(){
     this.timeoutWasCleared = false;
     this.storage = Storage({
       projectId: "avid-life-623"
