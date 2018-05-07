@@ -1,6 +1,6 @@
 import querystring from "querystring";
 import url from "url";
-import {auth} from "google-auth-library";
+import {JWT} from "google-auth-library";
 
 const apiUrl = "http://lock-down-email-endpoint-with-a-list-of-accounts.rvacore-test.appspot.com/_ah/api/rise/v0/email";
 export const targetEmail = "delivery@risevision.com";
@@ -13,17 +13,32 @@ const addressData = {
 
 let client = null;
 
-function getApiClient() {
-  if (client) {return client;}
-
-  if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    throw new Error("Service account key json file env variable is not configure. Cannnot create email API client");
+function getCredentials(credentialsBase64) {
+  if (credentialsBase64) {
+    const credentialsString = Buffer.from(credentialsBase64, 'base64').toString();
+    return JSON.parse(credentialsString);    
   }
 
-  return auth;
+  if (!process.env.EMAIL_API_CREDENTIALS) {
+    throw new Error("Service account key json file env variable is not configured. Cannnot create email API client");
+  }
+
+  return require(process.env.EMAIL_API_CREDENTIALS);
 }
 
-export function sendNotice(subject, text, apiClient = getApiClient()) {
+export function initApiClient(credentialsBase64) {
+  if (client) { return client; }
+
+  const keys = getCredentials(credentialsBase64);
+  client = new JWT({
+    email: keys.client_email,
+    key: keys.private_key,
+    scopes: ['https://www.googleapis.com/auth/userinfo.email']
+  });
+  return client;
+}
+
+export function sendNotice(subject, text, apiClient = initApiClient()) {
   const mailHeader = Object.assign({subject}, addressData);
   const url = `${apiUrl}?${querystring.stringify(mailHeader)}`;
 
@@ -34,8 +49,8 @@ export function sendNotice(subject, text, apiClient = getApiClient()) {
   };
 
   return apiClient.request(options).then(resp=>{
-    if (resp.statusCode !== 200) {
-      console.error(`${resp.statusCode} ${resp.statusMessage}`);
+    if (resp.status !== 200) {
+      console.error(`${resp.status} ${resp.statusText}`);
     }
 
     return resp.body;

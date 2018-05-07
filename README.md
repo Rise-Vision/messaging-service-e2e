@@ -5,7 +5,7 @@ Google Cloud Function for testing messaging service
 
 - Node.js
 - Google Cloud SDK
-- GOOGLE_APPLICATION_CREDENTIALS environment variable pointing to the service key json file to access email API
+- EMAIL_API_CREDENTIALS environment variable pointing to the service key json file to access email API
 
 ## Dev run local
 
