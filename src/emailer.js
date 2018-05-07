@@ -1,6 +1,6 @@
 import querystring from "querystring";
 import url from "url";
-import {JWT} from "google-auth-library";
+import {auth} from "google-auth-library";
 
 const apiUrl = "https://rvaserver2.appspot.com/_ah/api/rise/v0/email";
 export const targetEmail = "delivery@risevision.com";
@@ -16,17 +16,11 @@ let client = null;
 function getApiClient() {
   if (client) {return client;}
 
-  if (!process.env.EMAIL_API_CREDENTIALS) {
+  if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     throw new Error("Service account key json file env variable is not configure. Cannnot create email API client");
   }
 
-  const keys = require(process.env.EMAIL_API_CREDENTIALS);
-  client = new JWT({
-    email: keys.client_email,
-    key: keys.private_key,
-    scopes: ['https://www.googleapis.com/auth/userinfo.email']
-  });
-  return client;
+  return auth;
 }
 
 export function sendNotice(subject, text, apiClient = getApiClient()) {
