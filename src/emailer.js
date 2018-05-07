@@ -2,7 +2,7 @@ import querystring from "querystring";
 import url from "url";
 import {auth} from "google-auth-library";
 
-const apiUrl = "https://rvaserver2.appspot.com/_ah/api/rise/v0/email";
+const apiUrl = "http://lock-down-email-endpoint-with-a-list-of-accounts.rvacore-test.appspot.com/_ah/api/rise/v0/email";
 export const targetEmail = "delivery@risevision.com";
 
 const addressData = {
