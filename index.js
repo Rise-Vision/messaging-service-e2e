@@ -5,8 +5,8 @@ import {initApiClient} from "./src/emailer.js";
 exports.messagingServiceE2E = function messagingServiceE2E (req, res) {
   console.log("Starting E2E");
 
-  initApiClient(req.query.emailApiCredentails);
-  
+  initApiClient(req.query.emailApiCredentials);
+
   const tokenTest = new TokenTest(req.query.mstokenKey);
   const updateTest = new UpdateTest();
 
