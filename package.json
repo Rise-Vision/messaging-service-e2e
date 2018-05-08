@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./dev,./.babelrc,./package-lock.json,./npm-debug.log --copy-files && cd dist && npm install --production",
-    "start": "nodemon ./dev/dev-app.js --exec babel-node --presets es2015,stage-2"
+    "start": "nodemon ./dev/dev-app.js --exec babel-node --presets es2015,stage-2",
+    "predeploy": "npm run build",
+    "deploy": "cd dist && gcloud beta functions deploy messagingServiceE2E --stage-bucket messaging-service-e2e --trigger-http --timeout 540s --project messaging-service-180514"
   },
   "repository": {
     "type": "git",
@@ -20,14 +22,14 @@
   "homepage": "https://github.com/Rise-Vision/messaging-service-e2e#readme",
   "dependencies": {
     "@google-cloud/storage": "^1.4.0",
+    "google-auth-library": "^1.4.0",
     "node-hipchat": "^0.4.5",
     "primus": "^7.1.0",
     "ws": "^3.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
     "express": "^4.16.2",
     "nodemon": "^1.12.1",
     "rimraf": "^2.6.2"
