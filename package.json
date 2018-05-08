@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./dev,./.babelrc,./package-lock.json,./npm-debug.log --copy-files && cd dist && npm install --production",
-    "start": "nodemon ./dev/dev-app.js --exec babel-node --presets es2015,stage-2"
+    "start": "nodemon ./dev/dev-app.js --exec babel-node --presets es2015,stage-2",
+    "predeploy": "npm run build",
+    "deploy": "cd dist && gcloud beta functions deploy messagingServiceE2E --stage-bucket messaging-service-e2e --trigger-http --timeout 540s --project messaging-service-180514"
   },
   "repository": {
     "type": "git",
