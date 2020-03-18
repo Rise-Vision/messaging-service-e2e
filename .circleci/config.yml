@@ -34,7 +34,6 @@ jobs:
       steps:
         - restore_cache:
             keys:
-              - node-cache-{{ checksum "package.json" }}
               - dist-{{ .Revision }}
         - run:
             name: Setup gcloud
