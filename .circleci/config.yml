@@ -33,7 +33,9 @@ jobs:
             GOOGLE_COMPUTE_ZONE: us-central1-a
       steps:
         - restore_cache:
-            key: node-cache-{{ checksum "package.json" }}
+            keys:
+              - node-cache-{{ checksum "package.json" }}
+              - dist-{{ .Revision }}
         - run:
             name: Setup gcloud
             command: |
