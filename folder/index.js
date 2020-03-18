@@ -4,9 +4,8 @@ const Primus = require("primus");
 const msUrl = "https://services.risevision.com/messaging/primus?displayId=ms-e2e-folder-test&machineId=12345";
 const bucket = "messaging-service-e2e-folder";
 const folder = "test-parent-folder/test-sub-folder/";
-const storage = require("@google-cloud/storage")({
-  project: "avid-life-623"
-});
+const {Storage} = require("@google-cloud/storage")
+const storage = new Storage();
 
 process.on("unhandledRejection", console.error);
 process.on("uncaughtException", console.error);
