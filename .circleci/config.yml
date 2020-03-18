@@ -3,7 +3,7 @@ version: 2
 jobs:
     setup_npm_deps:
       docker:
-        - image: circleci/node:7.10
+        - image: circleci/node:latest
       steps:
         - checkout
         - restore_cache:
@@ -15,7 +15,7 @@ jobs:
               - ./node_modules
     build:
       docker:
-        - image: circleci/node:7.10
+        - image: circleci/node:latest
       steps:
         - checkout
         - restore_cache:
@@ -34,7 +34,6 @@ jobs:
       steps:
         - restore_cache:
             key: node-cache-{{ checksum "package.json" }}
-            key: dist-{{ .Revision }}
         - run:
             name: Setup gcloud
             command: |
@@ -45,10 +44,10 @@ jobs:
         - deploy:
             command: |
               cd /home/circleci/project/dist
-              gcloud beta functions deploy messagingServiceE2E --stage-bucket messaging-service-e2e --trigger-http --timeout 540s
+              gcloud beta functions deploy messagingServiceE2E --stage-bucket messaging-service-e2e --runtime=nodejs10 --trigger-http --timeout 540s
               cp package.json folder
               cd folder
-              gcloud beta functions deploy messagingServiceE2EFolder --stage-bucket messaging-service-e2e --trigger-http --timeout 540s
+              gcloud beta functions deploy messagingServiceE2EFolder --stage-bucket messaging-service-e2e --runtime=nodejs10 --trigger-http --timeout 540s
 
 
 workflows:
